@@ -41,11 +41,7 @@ async function removeContact(contactId) {
         const recvData = await fs.readFile(contactsPath, "utf-8")
         const parsedData = JSON.parse(recvData)
         const filteredData = parsedData.filter(elem => elem.id !== parseInt(contactId))
-        if (filteredData.length) {
-            writeDataHeandler(filteredData, contactsPath)
-        } else {
-            console.log("\nno contacts found...\n")
-        }
+        writeDataHeandler(filteredData, contactsPath)
     } catch (err) {
         console.log(`\n${err.name}!!!\n${err.message}\n`);
     }
