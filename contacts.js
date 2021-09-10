@@ -4,6 +4,8 @@ const fs = require('fs/promises')
 const DATABASE = "contacts.json"
 const contactsPath = path.resolve(__dirname, "db", DATABASE)
 
+const writeDataHeandler = require('./utils/writeDataHeandler.js')
+
 async function listContacts() {
     try {
         const recvData = await fs.readFile(contactsPath, "utf-8")
@@ -40,14 +42,9 @@ async function removeContact(contactId) {
         const parsedData = JSON.parse(recvData)
         const filteredData = parsedData.filter(elem => elem.id !== parseInt(contactId))
         if (filteredData.length) {
-            const respData = JSON.stringify(filteredData)
-            try {
-                return await fs.writeFile(contactsPath, respData, "utf8")
-            } catch (err) {
-                return console.log(`\n${err.name}!!!\n${err.message}\n`);
-            }
+            writeDataHeandler(filteredData, contactsPath)
         } else {
-            return console.log("\nno contacts found...\n")
+            console.log("\nno contacts found...\n")
         }
     } catch (err) {
         console.log(`\n${err.name}!!!\n${err.message}\n`);
@@ -66,12 +63,7 @@ async function addContact(name, email, phone) {
             "phone": phone
         }
         const newContactsData = [...parsedData, newContact]
-        const respData = JSON.stringify(newContactsData)
-        try {
-            return await fs.writeFile(contactsPath, respData, "utf8")
-        } catch (err) {
-            return console.log(`\n${err.name}!!!\n${err.message}\n`);
-        }
+        writeDataHeandler(newContactsData, contactsPath)
     } catch (err) {
         console.log(`\n${err.name}!!!\n${err.message}\n`);
     }
